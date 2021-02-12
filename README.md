@@ -1,2 +1,1 @@
-# chemical-lemons
-Created with CodeSandbox
+# Chemical Lemons

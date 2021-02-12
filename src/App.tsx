@@ -3,8 +3,12 @@ import "./styles.css";
 export default function App() {
   return (
     <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
+      <input type="number" placeholder="A" />
+      <input type="number" placeholder="B" />
+      <hr />
+      <p>Data grid goes here</p>
+      <hr />
+      <p>Scatter plot goes here</p>
     </div>
   );
 }
