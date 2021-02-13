@@ -22,8 +22,8 @@ interface IGridProperties {
 }
 
 interface IGridState {
-    x?: Nullable<Number>;
-    y?: Number;
+    x: any; // Nullable<Number> | String;
+    y: any; // Number | String;
 }
 
 export class Grid extends Component<IGridProperties, IGridState> {
@@ -36,7 +36,7 @@ export class Grid extends Component<IGridProperties, IGridState> {
         this.addEntry = this.addEntry.bind(this);
         this.changeEntryValue = this.changeEntryValue.bind(this);
 
-        this.state = {};
+        this.state = { x: "", y: "" };
     }
 
     changeScale(event: ChangeEvent<HTMLInputElement>) {
@@ -58,25 +58,21 @@ export class Grid extends Component<IGridProperties, IGridState> {
     changeEntryValue(event: ChangeEvent<HTMLInputElement>) {
         const { value, name } = event.target;
 
-        console.log("changing the value");
-
-        if ("" === value) this.setState({ [name]: void 0 });
+        if ("" === value) this.setState({ [name]: value });
         else this.setState({ [name]: parseFloat(value) });
     }
 
     addEntry(event: MouseEvent<HTMLButtonElement>) {
         const { x = null, y } = this.state;
 
-        console.log(this.state);
-        console.log(`X: ${x}, Y:${y}`);
-
         if (undefined === y) return;
 
         this.props.onEntryAdded({ x, y });
 
+        this.setState({ x: "", y: "" });
     }
 
-    renderEntry({ x, y, c }: Entry, index : Number ){
+    renderEntry({ x, y, c }: Entry, index: Number) {
         return (
             <tr key={`key_${index}`}>
                 <td>{null === x ? "" : x}</td>
@@ -198,7 +194,6 @@ export class App extends Component<{}, IAppState> {
     }
 
     onEntryAdded(entry: Entry) {
-        console.log(entry);
         this.setState({ entries: [...this.state.entries, entry] });
     }
 
