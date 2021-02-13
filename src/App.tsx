@@ -1,7 +1,30 @@
 import { Component } from "react";
 import "./styles.css";
 
-export class Grid extends Component {
+type Nullable<T> = T | null;
+
+type CalibrationConstants = [Nullable<Number>, Nullable<Number>];
+type Entry = { x: Nullable<Number>; y: Number };
+
+interface IGridProperties {
+    scale: Number;
+    constants: CalibrationConstants;
+    entries: Entry[];
+
+    onScaleChange(scale: Number): void;
+    onFormulaChange(constants: CalibrationConstants): void;
+    onEntryAdded(entry: Entry): void;
+}
+
+export class Grid extends Component<IGridProperties> {
+    setScale() {}
+
+    setA() {}
+
+    setB() {}
+
+    addEntry() {}
+
     render() {
         return (
             <table>
@@ -62,7 +85,14 @@ export class Grid extends Component {
     }
 }
 
-export class Chart extends Component {
+interface IChartProperties {
+    scale: Number;
+    constants: CalibrationConstants;
+    entries: Entry[];
+    calibrationCurve: Entry[];
+}
+
+export class Chart extends Component<IChartProperties> {
     render() {
         return (
             <div>
@@ -72,13 +102,55 @@ export class Chart extends Component {
     }
 }
 
-export class App extends Component {
+interface IAppState {
+    scale: Number;
+    constants: CalibrationConstants;
+    entries: Entry[];
+}
+
+export class App extends Component<{}, IAppState> {
+    constructor(props: {}) {
+        super(props);
+
+        this.onScaleChange = this.onScaleChange.bind(this);
+        this.onFormulaChange = this.onFormulaChange.bind(this);
+        this.onEntryAdded = this.onEntryAdded.bind(this);
+
+        this.state = {
+            scale: 1,
+            constants: [null, null],
+            entries: []
+        };
+    }
+
+    onScaleChange(scale: Number) {}
+
+    onFormulaChange(constants: CalibrationConstants) {}
+
+    onEntryAdded(entry: Entry) {}
+
+    calibrationCurve(): Entry[] {
+        return [];
+    }
+
     render() {
         return (
             <div>
-                <Grid />
+                <Grid
+                    scale={this.state.scale}
+                    constants={this.state.constants}
+                    entries={this.state.entries}
+                    onScaleChange={this.onScaleChange}
+                    onFormulaChange={this.onFormulaChange}
+                    onEntryAdded={this.onEntryAdded}
+                />
                 <hr />
-                <Chart />
+                <Chart
+                    scale={this.state.scale}
+                    constants={this.state.constants}
+                    entries={this.state.entries}
+                    calibrationCurve={this.calibrationCurve()}
+                />
             </div>
         );
     }
