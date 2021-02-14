@@ -48,7 +48,7 @@ export class App extends Component<{}, IAppState> {
     }
 
     get measurements(): Entry[] {
-        return this.state.entries.map(({ concentration: x, measurement: y }) => ({ x, y, c: -1 }));
+        return []; //this.state.entries.map(({ concentration: x, measurement: y }) => ({ x, y, c: -1 }));
     }
 
     get calibrationCurve(): Entry[] {

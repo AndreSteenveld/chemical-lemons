@@ -1,8 +1,11 @@
 export type Nullable<T> = T | null;
-export type CalibrationConstants = [Nullable<Number>, Nullable<Number>];
+export interface CalibrationConstants {
+    a: number;
+    b: number;
+}
 export interface Entry {
-    concentration: number;
+    concentration: Nullable<number>;
     measurement: number;
-    calibrated: number;
+    calibrated: Nullable<number>;
     scale: number;
 }
