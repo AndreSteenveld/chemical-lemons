@@ -1,168 +1,10 @@
-import { Component, ChangeEvent, MouseEvent } from "react";
+import { Component } from "react";
+import { CalibrationConstants, Entry } from "./domain";
+import { Grid } from "./Grid";
+import { Chart } from "./Chart";
 import "./styles.css";
-
-type Nullable<T> = T | null;
-
-type CalibrationConstants = [Nullable<Number>, Nullable<Number>];
-
-interface Entry {
-    x: Nullable<Number>;
-    y: Number;
-    c?: Nullable<Number>;
-}
-
-interface IGridProperties {
-    scale: Number;
-    constants: CalibrationConstants;
-    entries: Entry[];
-
-    onScaleChange(scale: Number): void;
-    onFormulaChange(constants: CalibrationConstants): void;
-    onEntryAdded(entry: Entry): void;
-}
-
-interface IGridState {
-    x: any; // Nullable<Number> | String;
-    y: any; // Number | String;
-}
-
-export class Grid extends Component<IGridProperties, IGridState> {
-    constructor(props: IGridProperties) {
-        super(props);
-
-        this.changeScale = this.changeScale.bind(this);
-        this.changeA = this.changeA.bind(this);
-        this.changeB = this.changeB.bind(this);
-        this.addEntry = this.addEntry.bind(this);
-        this.changeEntryValue = this.changeEntryValue.bind(this);
-
-        this.state = { x: "", y: "" };
-    }
-
-    changeScale(event: ChangeEvent<HTMLInputElement>) {
-        this.props.onScaleChange(event.target.valueAsNumber);
-    }
-
-    changeA(event: ChangeEvent<HTMLInputElement>) {
-        const [, b] = this.props.constants;
-
-        this.props.onFormulaChange([event.target.valueAsNumber, b]);
-    }
-
-    changeB(event: ChangeEvent<HTMLInputElement>) {
-        const [a] = this.props.constants;
-
-        this.props.onFormulaChange([a, event.target.valueAsNumber]);
-    }
-
-    changeEntryValue(event: ChangeEvent<HTMLInputElement>) {
-        const { value, name } = event.target;
-
-        if ("" === value) this.setState({ [name]: value });
-        else this.setState({ [name]: parseFloat(value) });
-    }
-
-    addEntry(event: MouseEvent<HTMLButtonElement>) {
-        const { x = null, y } = this.state;
-
-        if (undefined === y) return;
-
-        this.props.onEntryAdded({ x, y });
-
-        this.setState({ x: "", y: "" });
-    }
-
-    renderEntry({ x, y, c }: Entry, index: Number) {
-        return (
-            <tr key={`key_${index}`}>
-                <td>{null === x ? "" : x}</td>
-                <td>{null === c ? "" : c}</td>
-                <td>{y}</td>
-            </tr>
-        );
-    }
-
-    render() {
-        return (
-            <table>
-                <thead>
-                    <tr>
-                        <td colSpan={2}>
-                            Calibration formula: <i>y = a * x + b</i>
-                        </td>
-                        <td>
-                            Input and chart scale:
-                            <i>
-                                1e
-                                <input type="number" onChange={this.changeScale} />
-                            </i>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td colSpan={3}>
-                            A: <input type="number" onChange={this.changeA} />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td colSpan={3}>
-                            B: <input type="number" onChange={this.changeB} />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="col">X Concentration</th>
-                        <th scope="col">Y (Theorectical)</th>
-                        <th scope="col">Y (Measured)</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {!!this.props.entries.length ? (
-                        this.props.entries.map(this.renderEntry)
-                    ) : (
-                        <tr>
-                            <td colSpan={3}>
-                                <i>empty</i>
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-
-                <tfoot>
-                    <tr>
-                        <th scope="col">
-                            <input type="number" name="x" value={this.state.x} onChange={this.changeEntryValue} />
-                        </th>
-                        <th scope="col"> &nbsp; </th>
-                        <th scope="col">
-                            <input type="number" name="y" value={this.state.y} onChange={this.changeEntryValue} />
-                            <button onClick={this.addEntry}>Add</button>
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
-        );
-    }
-}
-
-interface IChartProperties {
-    scale: Number;
-    constants: CalibrationConstants;
-    entries: Entry[];
-    calibrationCurve: Entry[];
-}
-
-export class Chart extends Component<IChartProperties> {
-    render() {
-        return (
-            <div>
-                <span>Chart goes here</span>
-            </div>
-        );
-    }
-}
+import { CalibrationFormula } from "./CalibrationFormula";
+import { AddEntry } from "./AddEntry";
 
 interface IAppState {
     scale: Number;
@@ -197,31 +39,35 @@ export class App extends Component<{}, IAppState> {
         this.setState({ entries: [...this.state.entries, entry] });
     }
 
-    extrapolateEntries(): Entry[] {
+    get extrapolateEntries(): Entry[] {
         return this.state.entries.map(({ x, y }) => ({ x, y, c: -1 }));
     }
 
-    calibrationCurve(): Entry[] {
+    get calibrationCurve(): Entry[] {
         return [];
     }
 
     render() {
         return (
             <div>
+                <CalibrationFormula />
+                <hr />
                 <Grid
                     scale={this.state.scale}
                     constants={this.state.constants}
-                    entries={this.extrapolateEntries()}
+                    entries={this.extrapolateEntries}
                     onScaleChange={this.onScaleChange}
                     onFormulaChange={this.onFormulaChange}
                     onEntryAdded={this.onEntryAdded}
                 />
                 <hr />
+                <AddEntry />
+                <hr />
                 <Chart
                     scale={this.state.scale}
                     constants={this.state.constants}
-                    entries={this.extrapolateEntries()}
-                    calibrationCurve={this.calibrationCurve()}
+                    entries={this.extrapolateEntries}
+                    calibrationCurve={this.calibrationCurve}
                 />
             </div>
         );
