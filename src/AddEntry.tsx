@@ -10,14 +10,16 @@ interface IProperties {
 }
 
 interface IState {
-    extrapolatedConcentration: number | undefined;
-    concentration: number | undefined;
-    calibrated: number | undefined;
-    measurement: number | undefined;
-    scale: number | undefined;
+    extrapolatedConcentration?: number | string;
+    concentration?: number | undefined;
+    calibrated?: number | undefined;
+    measurement?: number | undefined;
+    scale?: number | undefined;
 }
 
 export class AddEntry extends Component<IProperties, IState> {
+    state: IState = { extrapolatedConcentration: "" };
+
     changeConcentration = (event: ChangeEvent<HTMLInputElement>) => {
         const concentration = event.target.valueAsNumber;
 
@@ -58,7 +60,7 @@ export class AddEntry extends Component<IProperties, IState> {
 
     clear = () => {
         this.setState({
-            extrapolatedConcentration: undefined,
+            extrapolatedConcentration: "",
             concentration: undefined,
             measurement: undefined,
             scale: undefined
@@ -69,7 +71,7 @@ export class AddEntry extends Component<IProperties, IState> {
         const { measurement, concentration, calibrated, scale, extrapolatedConcentration } = this.state;
 
         this.props.onEntryAdded({
-            concentration: concentration || extrapolatedConcentration,
+            concentration: concentration || (extrapolatedConcentration as number),
             measurement,
             calibrated,
             scale

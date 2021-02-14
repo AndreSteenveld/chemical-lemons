@@ -7,7 +7,7 @@ import { AddEntry } from "./AddEntry";
 import "./styles.css";
 
 interface IAppState {
-    scale: Number;
+    scale: number;
     constants: CalibrationConstants;
     entries: Entry[];
 }
@@ -16,39 +16,35 @@ export class App extends Component<{}, IAppState> {
     constructor(props: {}) {
         super(props);
 
-        this.onScaleChange = this.onScaleChange.bind(this);
-        this.onFormulaChange = this.onFormulaChange.bind(this);
-        this.onEntryAdded = this.onEntryAdded.bind(this);
-
         this.state = {
             scale: 1,
-            constants: [null, null],
+            constants: { a: 1, b: 1 },
             entries: []
         };
     }
 
-    extrapolateConcentration(measurement: Number, scale: Number = this.state.scale): Number {
+    extrapolateConcentration = (measurement: number, scale: number = this.state.scale): number => {
         return -1;
-    }
+    };
 
-    calibratedValue(concentration: Number, scale: Number = this.state.scale): Number {
+    calibratedValue = (concentration: number): number => {
         return -1;
-    }
+    };
 
-    onScaleChange(scale: Number) {
+    onScaleChange = (scale: number) => {
         this.setState({ scale });
-    }
+    };
 
-    onFormulaChange(constants: CalibrationConstants) {
+    onFormulaChange = (constants: CalibrationConstants) => {
         this.setState({ constants });
-    }
+    };
 
-    onEntryAdded(entry: Entry) {
+    onEntryAdded = (entry: Entry) => {
         this.setState({ entries: [...this.state.entries, entry] });
-    }
+    };
 
     get measurements(): Entry[] {
-        return []; //this.state.entries.map(({ concentration: x, measurement: y }) => ({ x, y, c: -1 }));
+        return [];
     }
 
     get calibrationCurve(): Entry[] {
@@ -58,9 +54,18 @@ export class App extends Component<{}, IAppState> {
     render() {
         return (
             <div>
-                <CalibrationFormula onScaleChange={this.onScaleChange} onFormulaChange={this.onFormulaChange} />
+                <CalibrationFormula
+                    scale={this.state.scale}
+                    constants={this.state.constants}
+                    onScaleChange={this.onScaleChange}
+                    onFormulaChange={this.onFormulaChange}
+                />
                 <hr />
-                <Grid entries={this.measurements} extrapolateConcentration={this.extrapolateConcentration} />
+                <Grid
+                    entries={this.measurements}
+                    extrapolateConcentration={this.extrapolateConcentration}
+                    calibratedValue={this.calibratedValue}
+                />
                 <hr />
                 <AddEntry
                     scale={this.state.scale}
