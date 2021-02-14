@@ -29,22 +29,56 @@ export class CalibrationFormula extends Component<IProperties, IState> {
     changeConstant = (event: ChangeEvent<HTMLInputElement>) => {
         this.props.onFormulaChange({
             ...this.props.constants,
-            [event.target.name]: event.target.valueAsNumber
+            [event.target.id]: event.target.valueAsNumber
         });
     };
 
     render() {
         return (
-            <div>
-                <div>
-                    A: <input type="number" name="a" value={this.props.constants.a} onChange={this.changeConstant} />
-                    B: <input type="number" name="b" value={this.props.constants.b} onChange={this.changeConstant} />
-                    Measurement scale:{" "}
-                    <input type="number" name="scale" value={this.props.scale} onChange={this.changeScale} />
+            <div className="row justify-content-between">
+                <div className="col-5">
+                    <div className="row p-1">
+                        <label className="col-4 text-end col-form-label" htmlFor="a">
+                            A:
+                        </label>
+                        <input
+                            className="col-8"
+                            type="number"
+                            id="a"
+                            value={this.props.constants.a}
+                            onChange={this.changeConstant}
+                        />
+                    </div>
+
+                    <div className="row p-1">
+                        <label className="col-4 text-end col-form-label" htmlFor="b">
+                            B:
+                        </label>
+                        <input
+                            className="col-8"
+                            type="number"
+                            id="b"
+                            value={this.props.constants.b}
+                            onChange={this.changeConstant}
+                        />
+                    </div>
+
+                    <div className="row p-1">
+                        <label className="col-4 text-end col-form-label" htmlFor="scale">
+                            Measurement scale:
+                        </label>
+                        <input
+                            className="col-8"
+                            type="number"
+                            name="scale"
+                            value={this.props.scale}
+                            onChange={this.changeScale}
+                        />
+                    </div>
                 </div>
 
-                <div>
-                    <span>
+                <div className="col-4">
+                    <span className="">
                         Calibration formula: <i>y = a * x + b</i>
                     </span>
                 </div>

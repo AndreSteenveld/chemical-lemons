@@ -10,7 +10,7 @@ interface IProperties {
 }
 
 interface IState {
-    extrapolatedConcentration?: number | string;
+    extrapolatedConcentration: number | string;
     concentration?: number | undefined;
     calibrated?: number | undefined;
     measurement?: number | undefined;
@@ -68,38 +68,61 @@ export class AddEntry extends Component<IProperties, IState> {
     };
 
     addEntry = () => {
-        const { measurement, concentration, calibrated, scale, extrapolatedConcentration } = this.state;
+        const { measurement, concentration = null, calibrated = null, scale } = this.state;
 
         this.props.onEntryAdded({
-            concentration: concentration || (extrapolatedConcentration as number),
-            measurement,
+            concentration,
             calibrated,
-            scale
+            measurement: measurement as number,
+            scale: scale as number
         });
     };
 
     render() {
         return (
-            <div>
-                <button onClick={this.clear}>X</button>
+            <div className="row row-cols-auto g-1 align-items-center justify-content-around">
+                <div className="col">
+                    <button className="btn btn-sm btn-outline-danger" onClick={this.clear}>
+                        X
+                    </button>
+                </div>
 
-                <input
-                    type="numeric"
-                    name="concentration"
-                    placeholder={this.state.extrapolatedConcentration.toString()}
-                    onChange={this.changeConcentration}
-                />
+                <div className="col">
+                    <div className="input-group">
+                        <div className="input-group-text">X:</div>
+                        <input
+                            type="number"
+                            name="concentration"
+                            placeholder={this.state.extrapolatedConcentration.toString()}
+                            onChange={this.changeConcentration}
+                        />
+                    </div>
+                </div>
 
-                <input type="numeric" name="measurement" onChange={this.changeMeasurement} />
+                <div className="col">
+                    <div className="input-group">
+                        <div className="input-group-text">Y:</div>
+                        <input type="number" name="measurement" onChange={this.changeMeasurement} />
+                    </div>
+                </div>
 
-                <button onClick={this.addEntry}>Add</button>
+                <div className="col">
+                    <button className="btn btn-success" onClick={this.addEntry}>
+                        Add
+                    </button>
+                </div>
 
-                <input
-                    type="numeric"
-                    name="scale"
-                    placeholder={(1).toExponential(this.props.scale)}
-                    onChange={this.changeScale}
-                />
+                <div className="col">
+                    <div className="input-group">
+                        <div className="input-group-text">Scale:</div>
+                        <input
+                            type="number"
+                            name="scale"
+                            placeholder={(1).toExponential(this.props.scale)}
+                            onChange={this.changeScale}
+                        />
+                    </div>
+                </div>
             </div>
         );
     }

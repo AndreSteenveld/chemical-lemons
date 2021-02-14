@@ -10,7 +10,7 @@ interface IGridProperties {
 export class Grid extends Component<IGridProperties> {
     render() {
         const empty = (
-            <tr className="empty">
+            <tr className="empty text-center">
                 <td colSpan={3}>
                     <i>empty</i>
                 </td>
@@ -36,7 +36,7 @@ export class Grid extends Component<IGridProperties> {
         });
 
         return (
-            <table>
+            <table className="table table-striped table-sm">
                 <thead>
                     <tr>
                         <th scope="col" id="concentration">

@@ -53,7 +53,7 @@ export class App extends Component<{}, IAppState> {
 
     render() {
         return (
-            <div>
+            <div id="app" className="container-fluid">
                 <CalibrationFormula
                     scale={this.state.scale}
                     constants={this.state.constants}
