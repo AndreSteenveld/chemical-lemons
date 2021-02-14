@@ -61,13 +61,13 @@ export class Grid extends Component<IGridProperties, IGridState> {
 
         if (undefined === y) return;
 
-        this.props.onEntryAdded({ x, y });
+        this.props.onEntryAdded({ concentration: x, measurement: y });
 
         // Working on this Grid component, this line made me realize it has to be split up...
         this.setState({ x: "", y: "" });
     }
 
-    renderEntry({ x, y, c }: Entry, index: Number) {
+    renderEntry({ concentration: x, measurement: y, calibrated: c }: Entry, index: Number) {
         return (
             <tr key={`key_${index}`}>
                 <td>{null === x ? "" : x}</td>
