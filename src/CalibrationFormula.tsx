@@ -5,7 +5,7 @@ interface IProperties {
     scale: number;
     constants: CalibrationConstants;
     onScaleChange(scale: number): void;
-    onFormulaChange(constants: CalibrationConstants);
+    onFormulaChange(constants: CalibrationConstants): void;
 }
 
 interface IState {
@@ -29,58 +29,60 @@ export class CalibrationFormula extends Component<IProperties, IState> {
     changeConstant = (event: ChangeEvent<HTMLInputElement>) => {
         this.props.onFormulaChange({
             ...this.props.constants,
-            [event.target.id]: event.target.valueAsNumber
+            [event.target.name]: event.target.valueAsNumber
         });
     };
 
     render() {
         return (
-            <div className="row justify-content-between">
-                <div className="col-5">
-                    <div className="row p-1">
-                        <label className="col-4 text-end col-form-label" htmlFor="a">
-                            A:
-                        </label>
+            <div className="row g-1">
+                <div className="col-6 ms-auto text-end">
+                    <span className="h4">
+                        Calibration formula: <i>y = a * x + b</i>
+                    </span>
+                </div>
+
+                <div className="col-4 align-self-start order-first">
+                    <div className="input-group">
+                        <span className="input-group-text">A:</span>
                         <input
-                            className="col-8"
+                            className="form-control"
                             type="number"
-                            id="a"
+                            name="a"
                             value={this.props.constants.a}
                             onChange={this.changeConstant}
                         />
                     </div>
+                </div>
 
-                    <div className="row p-1">
-                        <label className="col-4 text-end col-form-label" htmlFor="b">
-                            B:
-                        </label>
+                <div className="w-100" />
+
+                <div className="col-4 align-self-start">
+                    <div className="input-group">
+                        <span className="input-group-text">B:</span>
                         <input
-                            className="col-8"
+                            className="form-control"
                             type="number"
-                            id="b"
+                            name="b"
                             value={this.props.constants.b}
                             onChange={this.changeConstant}
                         />
                     </div>
+                </div>
 
-                    <div className="row p-1">
-                        <label className="col-4 text-end col-form-label" htmlFor="scale">
-                            Measurement scale:
-                        </label>
+                <div className="w-100" />
+
+                <div className="col-4 align-self-start">
+                    <div className="input-group">
+                        <span className="input-group-text">Scale:</span>
                         <input
-                            className="col-8"
+                            className="form-control"
                             type="number"
                             name="scale"
                             value={this.props.scale}
                             onChange={this.changeScale}
                         />
                     </div>
-                </div>
-
-                <div className="col-4">
-                    <span className="">
-                        Calibration formula: <i>y = a * x + b</i>
-                    </span>
                 </div>
             </div>
         );

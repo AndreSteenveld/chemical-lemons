@@ -23,12 +23,16 @@ export class App extends Component<{}, IAppState> {
         };
     }
 
-    extrapolateConcentration = (measurement: number, scale: number = this.state.scale): number => {
-        return -1;
+    extrapolateConcentration = (y: number, scale: number = this.state.scale): number => {
+        const { a, b } = this.state.constants;
+
+        return (y - b) / a;
     };
 
-    calibratedValue = (concentration: number): number => {
-        return -1;
+    calibratedValue = (x: number): number => {
+        const { a, b } = this.state.constants;
+
+        return a * x + b;
     };
 
     onScaleChange = (scale: number) => {
@@ -43,17 +47,20 @@ export class App extends Component<{}, IAppState> {
         this.setState({ entries: [...this.state.entries, entry] });
     };
 
-    get measurements(): Entry[] {
-        return [];
-    }
-
     get calibrationCurve(): Entry[] {
-        return [];
+        return Array(100)
+            .fill(null)
+            .map((_, index) => ({
+                concentration: index,
+                scale: -1,
+                measurement: -1,
+                calibrated: this.calibratedValue(index)
+            }));
     }
 
     render() {
         return (
-            <div id="app" className="container-fluid">
+            <div id="app" className="container-fluid p-1">
                 <CalibrationFormula
                     scale={this.state.scale}
                     constants={this.state.constants}
@@ -62,19 +69,25 @@ export class App extends Component<{}, IAppState> {
                 />
                 <hr />
                 <Grid
-                    entries={this.measurements}
+                    entries={this.state.entries}
                     extrapolateConcentration={this.extrapolateConcentration}
                     calibratedValue={this.calibratedValue}
                 />
                 <hr />
                 <AddEntry
+                    key={this.state.entries.length}
                     scale={this.state.scale}
                     extrapolateConcentration={this.extrapolateConcentration}
                     calibratedValue={this.calibratedValue}
                     onEntryAdded={this.onEntryAdded}
                 />
                 <hr />
-                <Chart entries={this.measurements} calibrationCurve={this.calibrationCurve} />
+                <Chart
+                    entries={this.state.entries}
+                    calibrationCurve={this.calibrationCurve}
+                    extrapolateConcentration={this.extrapolateConcentration}
+                    calibratedValue={this.calibratedValue}
+                />
             </div>
         );
     }

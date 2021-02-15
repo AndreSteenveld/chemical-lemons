@@ -5,27 +5,33 @@ interface IProperties {
     scale: number;
 
     extrapolateConcentration(measurement: number, scale?: number): number;
-    calibratedValue(concentration: number, scale?: number): number;
+    calibratedValue(concentration: number): number;
     onEntryAdded(entry: Entry): void;
 }
 
 interface IState {
     extrapolatedConcentration: number | string;
-    concentration?: number | undefined;
-    calibrated?: number | undefined;
-    measurement?: number | undefined;
-    scale?: number | undefined;
+    concentration: number | undefined;
+    calibrated: number | undefined;
+    measurement: number | undefined;
+    scale: number | undefined;
 }
 
 export class AddEntry extends Component<IProperties, IState> {
-    state: IState = { extrapolatedConcentration: "" };
+    state: IState = {
+        extrapolatedConcentration: "",
+        concentration: undefined,
+        calibrated: undefined,
+        measurement: undefined,
+        scale: undefined
+    };
 
     changeConcentration = (event: ChangeEvent<HTMLInputElement>) => {
         const concentration = event.target.valueAsNumber;
 
         this.setState({
             concentration,
-            calibrated: this.props.calibratedValue(concentration, this.state.scale || this.props.scale)
+            calibrated: this.props.calibratedValue(concentration)
         });
     };
 
@@ -45,13 +51,14 @@ export class AddEntry extends Component<IProperties, IState> {
         const scale = event.target.valueAsNumber;
         const { measurement, concentration } = this.state;
 
+        // TODO: Fix for the proper behaviiour with extrapolated values
         if ("number" === typeof measurement) {
             const extrapolatedConcentration = concentration || this.props.extrapolateConcentration(measurement, scale);
 
             this.setState({
                 scale,
                 extrapolatedConcentration,
-                calibrated: this.props.calibratedValue(extrapolatedConcentration, scale)
+                calibrated: this.props.calibratedValue(extrapolatedConcentration)
             });
         } else {
             this.setState({ scale });
@@ -89,10 +96,11 @@ export class AddEntry extends Component<IProperties, IState> {
 
                 <div className="col">
                     <div className="input-group">
-                        <div className="input-group-text">X:</div>
+                        <span className="input-group-text">X:</span>
                         <input
                             type="number"
                             name="concentration"
+                            className="form-control"
                             placeholder={this.state.extrapolatedConcentration.toString()}
                             onChange={this.changeConcentration}
                         />
@@ -101,8 +109,13 @@ export class AddEntry extends Component<IProperties, IState> {
 
                 <div className="col">
                     <div className="input-group">
-                        <div className="input-group-text">Y:</div>
-                        <input type="number" name="measurement" onChange={this.changeMeasurement} />
+                        <span className="input-group-text">Y:</span>
+                        <input
+                            type="number"
+                            name="measurement"
+                            className="form-control"
+                            onChange={this.changeMeasurement}
+                        />
                     </div>
                 </div>
 
@@ -114,10 +127,11 @@ export class AddEntry extends Component<IProperties, IState> {
 
                 <div className="col">
                     <div className="input-group">
-                        <div className="input-group-text">Scale:</div>
+                        <span className="input-group-text">Scale:</span>
                         <input
                             type="number"
                             name="scale"
+                            className="form-control"
                             placeholder={(1).toExponential(this.props.scale)}
                             onChange={this.changeScale}
                         />

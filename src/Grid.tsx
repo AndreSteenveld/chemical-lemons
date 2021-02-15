@@ -28,9 +28,16 @@ export class Grid extends Component<IGridProperties> {
 
             return (
                 <tr key={index} className={`${extrapolate ? "extrapolated" : ""}`}>
-                    <td headers="concentration">{concentration}</td>
-                    <td headers="calibrated">{calibrated}</td>
-                    <td headers="measurement">{measurement}</td>
+                    <th scope="row">{index + 1}</th>
+                    <td headers="concentration" className="text-end">
+                        {concentration}
+                    </td>
+                    <td headers="calibrated" className="text-center">
+                        {calibrated}
+                    </td>
+                    <td headers="measurement" className="text-center">
+                        {measurement}
+                    </td>
                 </tr>
             );
         });
@@ -39,13 +46,16 @@ export class Grid extends Component<IGridProperties> {
             <table className="table table-striped table-sm">
                 <thead>
                     <tr>
-                        <th scope="col" id="concentration">
+                        <th scope="col" id="row-no">
+                            #
+                        </th>
+                        <th scope="col" className="text-end" id="concentration">
                             X Concentration
                         </th>
-                        <th scope="col" id="calibrated">
+                        <th scope="col" className="text-center" id="calibrated">
                             Y (Theorectical)
                         </th>
-                        <th scope="col" id="measurement">
+                        <th scope="col" className="text-center" id="measurement">
                             Y (Measured)
                         </th>
                     </tr>
