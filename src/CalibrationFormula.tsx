@@ -4,6 +4,7 @@ import { CalibrationConstants } from "./domain";
 interface IProperties {
     scale: number;
     constants: CalibrationConstants;
+    disabled: boolean;
     onScaleChange(scale: number): void;
     onFormulaChange(constants: CalibrationConstants): void;
 }
@@ -51,6 +52,7 @@ export class CalibrationFormula extends Component<IProperties, IState> {
                             name="a"
                             value={this.props.constants.a}
                             onChange={this.changeConstant}
+                            disabled={this.props.disabled}
                         />
                     </div>
                 </div>
@@ -66,6 +68,7 @@ export class CalibrationFormula extends Component<IProperties, IState> {
                             name="b"
                             value={this.props.constants.b}
                             onChange={this.changeConstant}
+                            disabled={this.props.disabled}
                         />
                     </div>
                 </div>

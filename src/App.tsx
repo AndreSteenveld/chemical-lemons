@@ -48,7 +48,7 @@ export class App extends Component<{}, IAppState> {
     };
 
     get calibrationCurve(): Entry[] {
-        return Array(100)
+        return Array(101)
             .fill(null)
             .map((_, index) => ({
                 concentration: index,
@@ -64,6 +64,7 @@ export class App extends Component<{}, IAppState> {
                 <CalibrationFormula
                     scale={this.state.scale}
                     constants={this.state.constants}
+                    disabled={!!this.state.entries.length}
                     onScaleChange={this.onScaleChange}
                     onFormulaChange={this.onFormulaChange}
                 />
