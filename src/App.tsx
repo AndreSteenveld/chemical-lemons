@@ -86,7 +86,6 @@ export class App extends Component<{}, IAppState> {
                     entries={this.state.entries}
                     calibrationCurve={this.calibrationCurve}
                     extrapolateConcentration={this.extrapolateConcentration}
-                    calibratedValue={this.calibratedValue}
                 />
             </div>
         );

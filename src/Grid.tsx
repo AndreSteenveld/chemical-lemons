@@ -11,7 +11,7 @@ export class Grid extends Component<IGridProperties> {
     render() {
         const empty = (
             <tr className="empty text-center">
-                <td colSpan={3}>
+                <td colSpan={4}>
                     <i>empty</i>
                 </td>
             </tr>
