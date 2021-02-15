@@ -18,7 +18,7 @@ export class App extends Component<{}, IAppState> {
 
         this.state = {
             scale: 1,
-            constants: { a: 1, b: 1 },
+            constants: { a: 1, b: 0 },
             entries: []
         };
     }
